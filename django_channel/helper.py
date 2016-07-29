@@ -49,7 +49,8 @@ def get_messages(name, timestamp, limit, timeout):
                 timestamp
             ).replace(
                 tzinfo=utc,
-                microsecond = int(timestamp * 1000000) % int(timestamp)),
+                microsecond = int(timestamp * 1000000) % int(timestamp)
+            ),
         ).order_by("-created_time")[:limit]
         return [{
             "content": message.content,
