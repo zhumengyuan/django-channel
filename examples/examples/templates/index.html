@@ -18,7 +18,9 @@
                 if(running_name == name){
                   for(var index in data){
                     message = data[index];
-                    timestamp = message.timestamp;
+                    if(timestamp < message.timestamp){
+                      timestamp = message.timestamp;
+                    }
                     $('#messagecontainer').prepend('<p>' + message.content + "," + message.timestamp + '</p>');
                   }
                   pull_channel(name, timestamp);
