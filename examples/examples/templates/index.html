@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>django-websocket</title>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript">//<![CDATA[
+
+    var timestamp = new Date().getTime()/1000.0;
+    var running_name;
+
+    $(function () {
+        function pull_channel(name, timestamp){
+          $.ajax({
+              type:'get',
+              url:"/channels/channel_pull/" + name + "/?timestamp=" + timestamp,
+              dataType:'json',
+              success:function(data){
+                if(running_name == name){
+                  for(var index in data){
+                    message = data[index];
+                    timestamp = message.timestamp;
+                    $('#messagecontainer').prepend('<p>' + message.content + "," + message.timestamp + '</p>');
+                  }
+                  pull_channel(name, timestamp);
+                }
+              },
+              error:function(){
+                if(running_name == name){
+                  alert("connect error, please reconnect!");
+                  running_name = null;
+                }
+              }
+          });
+        };
+        $('#connect').click(function () {
+            name = $('#channel_name').val()
+            if(name != running_name){
+              running_name = name;
+              pull_channel(running_name, timestamp);
+            }else{
+              alert("already connected:" + name);
+            }
+        });
+
+
+        $('#send_message').click(function () {
+          $.ajax({
+              type:'post',
+              url:"/channels/channel_send/" + running_name + "/",
+              data: {
+                ttl: 300,
+                content: $('#message').val()
+              },
+              dataType:'json',
+              success:function(data){
+
+              },
+              error:function(){
+                alert("send error");
+              }
+          });
+        });
+    });
+    //]]></script>
+</head>
+<body>
+<br>
+<input type="text" id="channel_name" value="test" />
+<input type="text" id="message" value="Hello, World!" />
+<button type="button" id="send_message">Send message</button>
+<button type="button" id="connect">Connect</button>
+<h1>Received Messages</h1>
+<div id="messagecontainer">
+
+</div>
+</body>
+</html>
