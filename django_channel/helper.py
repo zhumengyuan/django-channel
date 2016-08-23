@@ -63,15 +63,15 @@ def get_messages(name, timestamp, limit, timeout):
     if not messages:
         sub = CHANNEL_REDIS.pubsub()
         try:
-           sub.subscribe([name, ])
-           sub.get_message(True, timeout=timeout)
-           while True:
-               data = sub.get_message(timeout=timeout)
-               if not data:
-                   break
-               if data and data["type"] == 'message':
-                   messages.append(json.loads(data["data"].decode("utf-8")))
-                   break
-         finally:
+            sub.subscribe([name, ])
+            sub.get_message(True, timeout=timeout)
+            while True:
+                data = sub.get_message(timeout=timeout)
+                if not data:
+                    break
+                if data and data["type"] == 'message':
+                    messages.append(json.loads(data["data"].decode("utf-8")))
+                    break
+        finally:
             sub.close()
     return messages
