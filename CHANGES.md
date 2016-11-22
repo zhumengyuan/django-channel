@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Release 0.4.3
+Release 0.4.5
 -------------
 
 - add clean channel url
