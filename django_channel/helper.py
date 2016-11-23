@@ -51,7 +51,7 @@ def get_messages(name, timestamp, limit, order, timeout):
                 tzinfo=utc,
                 microsecond = int(timestamp * 1000000) % int(timestamp)
             ),
-        ).order_by("%created_time" % order)[:limit]
+        ).order_by("%screated_time" % order)[:limit]
         return [{
             "content": message.content,
             "timestamp": calendar.timegm(
